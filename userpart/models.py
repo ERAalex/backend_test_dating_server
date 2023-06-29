@@ -1,7 +1,7 @@
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
-from .img_work import image_resize
+from .img_work import image_resize_and_watermark
 
 
 class UserAccountManager(BaseUserManager):
@@ -35,7 +35,7 @@ class UserAccountManager(BaseUserManager):
 
 def user_directory_path(instance, filename):
     # сохраним аватарку юзера в папке с уникальным именем (в идеале по его id)
-    # но так как еще не создан объект (пользователь), мы не можем обратится к id, возмем почту до '@'
+    # но так как еще не создан объект (пользователь), мы не можем обратится к id, возьмем почту до '@'
     return 'user_{0}/{1}'.format(instance.email.partition('@')[0], filename)
 
 
@@ -53,10 +53,10 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
-    # изменим размер картинки, чтобы стандартизировать всех пользователей. Логику будет в файле img_work(image_resize)
+    # изменим размер картинки + добавим watermark. Логика будет в файле img_work(image_resize)
     def save(self, commit=True, *args, **kwargs):
         if commit:
-            image_resize(self.avatar, 250, 250)
+            image_resize_and_watermark(self.avatar, 230, 230)
             super().save(*args, **kwargs)
 
     def get_full_name(self):
