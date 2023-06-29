@@ -1,7 +1,7 @@
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
-from rest_framework.exceptions import ValidationError
+from .img_work import image_resize
 
 
 class UserAccountManager(BaseUserManager):
@@ -34,8 +34,8 @@ class UserAccountManager(BaseUserManager):
 
 
 def user_directory_path(instance, filename):
-    # сохраним для каждого пользователя его аватарку в его папке с уникальным именем (в идеале по id)
-    # но так как еще не создан объект (пользователь) мы не можем обратится к id, возмем почту до '@'
+    # сохраним аватарку юзера в папке с уникальным именем (в идеале по его id)
+    # но так как еще не создан объект (пользователь), мы не можем обратится к id, возмем почту до '@'
     return 'user_{0}/{1}'.format(instance.email.partition('@')[0], filename)
 
 
@@ -49,10 +49,15 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     sex = models.CharField(max_length=20, blank=True, null=True)
     avatar = models.FileField(upload_to=user_directory_path, blank=True, null=True)
 
-
     objects = UserAccountManager()
 
     USERNAME_FIELD = "email"
+
+    # изменим размер картинки, чтобы стандартизировать всех пользователей. Логику будет в файле img_work(image_resize)
+    def save(self, commit=True, *args, **kwargs):
+        if commit:
+            image_resize(self.avatar, 250, 250)
+            super().save(*args, **kwargs)
 
     def get_full_name(self):
         return self.name
