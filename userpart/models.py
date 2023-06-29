@@ -5,16 +5,11 @@ from rest_framework.exceptions import ValidationError
 
 
 class UserAccountManager(BaseUserManager):
-    def create(self, email, name, surname=None, password=None):
-        if not email:
-            raise ValidationError({"error": "Не указана почта"})
-
-        if not name or len(name) <= 2 or len(name) >= 50:
-            raise ValidationError({"error": "Укажите корректное имя"})
+    def create(self, email, name, surname=None, password=None, avatar=None):
 
         email = self.normalize_email(email)
         user = self.model(
-            email=email, name=name, surname=surname
+            email=email, name=name, surname=surname, avatar=avatar
         )
 
         user.set_password(password)
@@ -40,16 +35,17 @@ class UserAccountManager(BaseUserManager):
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True, null=True)
     surname = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     person_created = models.DateTimeField("Дата создания аккаунта", auto_now=True)
+    sex = models.CharField(max_length=20, blank=True, null=True)
+    avatar = models.ImageField(upload_to='images/avatars/', blank=True)
 
     objects = UserAccountManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["name"]
 
     def get_full_name(self):
         return self.name

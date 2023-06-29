@@ -31,11 +31,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'userpart',
     'rest_framework',
     'djoser',
     'drf_yasg',
     'debug_toolbar',
-    'userpart',
 
 ]
 

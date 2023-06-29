@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.parsers import MultiPartParser
 
 from .models import UserAccount
 
@@ -7,12 +8,15 @@ User = get_user_model()
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    """we need to use MultiPartParses for saving images"""
+    parser_classes = (MultiPartParser,)
+
     class Meta:
-        model = User
-        fields = ("id", "email", "name", "password", "surname")
+        model = UserAccount
+        fields = ("id", "email", "name", "password", "surname", "avatar")
 
 
 class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
-        fields = ("id", "email", "name", "surname")
+        fields = ("id", "email", "name", "surname", "avatar")
