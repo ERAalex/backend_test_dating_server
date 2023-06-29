@@ -7,16 +7,10 @@ from .models import UserAccount
 User = get_user_model()
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class UserAccountSerializer(serializers.ModelSerializer):
     """we need to use MultiPartParses for saving images"""
     parser_classes = (MultiPartParser,)
 
     class Meta:
         model = UserAccount
-        fields = ("id", "email", "name", "password", "surname", "avatar")
-
-
-class UserAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserAccount
-        fields = ("id", "email", "name", "surname", "avatar")
+        fields = ("id", "email", "name", "password", "surname", "avatar", "sex")

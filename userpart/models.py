@@ -33,6 +33,12 @@ class UserAccountManager(BaseUserManager):
         return user
 
 
+def user_directory_path(instance, filename):
+    # сохраним для каждого пользователя его аватарку в его папке с уникальным именем (в идеале по id)
+    # но так как еще не создан объект (пользователь) мы не можем обратится к id, возмем почту до '@'
+    return 'user_{0}/{1}'.format(instance.email.partition('@')[0], filename)
+
+
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -41,7 +47,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     person_created = models.DateTimeField("Дата создания аккаунта", auto_now=True)
     sex = models.CharField(max_length=20, blank=True, null=True)
-    avatar = models.ImageField(upload_to='images/avatars/', blank=True)
+    avatar = models.FileField(upload_to=user_directory_path, blank=True, null=True)
+
 
     objects = UserAccountManager()
 

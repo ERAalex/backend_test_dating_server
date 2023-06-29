@@ -174,8 +174,8 @@ DJOSER = {
 
     },
     "SERIALIZERS": {
-        "user_create": "userpart.serializers.UserCreateSerializer",
-        "user": "userpart.serializers.UserCreateSerializer",
+        "user_create": "userpart.serializers.UserAccountSerializer",
+        "user": "userpart.serializers.UserAccountSerializer",
         "current_user": "userpart.serializers.UserAccountSerializer",
         "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
