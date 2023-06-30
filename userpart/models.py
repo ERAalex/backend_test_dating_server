@@ -20,10 +20,10 @@ class UserAccountManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, name, surname=None, password=None):
+    def create_superuser(self, email, name=None, surname=None, password=None, avatar=None):
         email = self.normalize_email(email)
         user = self.model(
-            email=email, name=name, surname=surname
+            email=email, name=name, surname=surname, avatar=avatar
         )
         user.set_password(password)
         user.save()
@@ -61,8 +61,11 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     # изменим размер картинки + добавим watermark. Логика будет в файле img_work(image_resize)
     def save(self, commit=True, *args, **kwargs):
         if commit:
-            image_resize_and_watermark(self.avatar, 230, 230)
-            super().save(*args, **kwargs)
+            try:
+                image_resize_and_watermark(self.avatar, 230, 230)
+                super().save(*args, **kwargs)
+            except:
+                super().save(*args, **kwargs)
 
     def get_full_name(self):
         return self.name
@@ -80,10 +83,9 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
 class UserRelations(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, unique=True)
-    match_persons = models.ManyToManyField(UserAccount, related_name='match', blank=True, null=True)
-    liked_persons = models.ManyToManyField(UserAccount, related_name='liked', blank=True, null=True)
-
+    user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
+    match_persons = models.ManyToManyField(UserAccount, related_name='match', blank=True)
+    liked_persons = models.ManyToManyField(UserAccount, related_name='liked', blank=True)
 
     class Meta:
         verbose_name = "Отношения пользователей"

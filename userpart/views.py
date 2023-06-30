@@ -63,7 +63,7 @@ def make_match(request, match):
 class UsersListView(generics.ListAPIView):
     """ Вывод списка пользователей """
     serializer_class = UserAccountSerializer
-    permission_classes = [AllowAny, ]
+    permission_classes = [IsAuthenticated, ]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = UserFilter
 

@@ -41,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -73,6 +74,8 @@ DATABASES = {
         "NAME": env("DB_NAME", default="DB_NAME"),
         "USER": env("DB_USER", default="DB_USER"),
         "PASSWORD": env("DB_PASS", default="DB_PASS"),
+        # используй db для docker-compose
+        # "HOST": "db",
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default=5432),
     }
@@ -196,7 +199,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
-'''Production - Celery settings'''
+'''Docker-compose - Celery settings'''
 # CELERY_BROKER_URL = 'redis://redis:6379'
 # CELERY_RESULT_BACKEND = 'redis://redis:6379'
 
