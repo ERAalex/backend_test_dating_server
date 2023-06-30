@@ -51,6 +51,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     person_created = models.DateTimeField("Дата создания аккаунта", auto_now=True)
     sex = models.CharField(max_length=20, blank=True, null=True)
     avatar = models.FileField(upload_to=user_directory_path, blank=True, null=True)
+    longitude = models.FloatField(verbose_name='Долгота', blank=True, null=True)
+    latitude = models.FloatField(verbose_name='Широта', blank=True, null=True)
 
     objects = UserAccountManager()
 
@@ -81,6 +83,7 @@ class UserRelations(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, unique=True)
     match_persons = models.ManyToManyField(UserAccount, related_name='match', blank=True, null=True)
     liked_persons = models.ManyToManyField(UserAccount, related_name='liked', blank=True, null=True)
+
 
     class Meta:
         verbose_name = "Отношения пользователей"
