@@ -4,8 +4,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .serializers import UserAccountSerializer
-from .models import UserRelations, UserAccount
-from .email_confirmation import confirmation_relation_email
+from .models import UserRelations
+from .tasks import confirmation_relation_email_celery
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
@@ -40,10 +41,16 @@ def make_match(request, match):
             user_data.match_persons.add(match)
             user_data.liked_persons.add(match)
 
-            confirmation_relation_email(user_email=request.user.email, user_name=request.user.name,
-                                        user_match_email=check_match.user.email)
+            ''' Обычная отправка письма - если не нужен сelery:'''
+            # confirmation_relation_email(user_email=request.user.email, user_name=request.user.name,
+            #                             user_match_email=check_match.user.email)
+
+            ''' Celery - отправляем письмо'''
+            confirmation_relation_email_celery.delay(user_email=request.user.email,
+                                                     user_name=request.user.name,
+                                                     user_match_email=check_match.user.email)
+
             return Response('письмо отправлено')
 
     user_data.match_persons.add(match)
     return Response('пользователь добавлен')
-

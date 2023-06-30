@@ -189,3 +189,16 @@ SWAGGER_SETTINGS = {
         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
     }
 }
+
+'''Production - Celery settings'''
+# CELERY_BROKER_URL = 'redis://redis:6379'
+# CELERY_RESULT_BACKEND = 'redis://redis:6379'
+
+'''Localhost - Celery settings'''
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'

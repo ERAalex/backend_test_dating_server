@@ -1,0 +1,21 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}{{ site_name }} - Ваша учетная запись успешно создана и активирована!{% endblocktrans %}
+{% endblock %}
+
+{% block text_body %}
+{% trans "Ваш аккаунт создан и готов к использованию!" %}
+
+{% trans "Спасибо за использование нашего сайта!" %}
+
+{% blocktrans %}Команда {{ site_name }}{% endblocktrans %}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% trans "Ваш аккаунт создан и готов к использованию!" %}</p>
+
+<p>{% trans "Спасибо за использование нашего сайта!" %}</p>
+
+<p>{% blocktrans %}Команда {{ site_name }}{% endblocktrans %}</p>
+{% endblock html_body %}

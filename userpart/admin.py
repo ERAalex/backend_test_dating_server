@@ -7,6 +7,7 @@ from .models import UserAccount, UserRelations
 class UserAccountAdmin(admin.ModelAdmin):
     list_display = ["email", "id", "name", "is_active", "is_staff"]
 
+
 @admin.register(UserRelations)
 class UserRelationAdmin(admin.ModelAdmin):
     list_display = ["id", "user"]
