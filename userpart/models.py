@@ -15,6 +15,9 @@ class UserAccountManager(BaseUserManager):
         user.set_password(password)
         user.save()
 
+        # готовим таблицу для связи с другими пользователями по лайкам
+        UserRelations.objects.create(user=user)
+
         return user
 
     def create_superuser(self, email, name, surname=None, password=None):
@@ -71,3 +74,14 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Пользователи"
         verbose_name_plural = "Пользователи"
+
+
+class UserRelations(models.Model):
+    id = models.AutoField(primary_key=True, unique=True)
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, unique=True)
+    match_persons = models.ManyToManyField(UserAccount, related_name='match', blank=True, null=True)
+    liked_persons = models.ManyToManyField(UserAccount, related_name='liked', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Отношения пользователей"
+        verbose_name_plural = "Отношения пользователей"
