@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -6,6 +6,10 @@ from rest_framework.response import Response
 from .serializers import UserAccountSerializer
 from .models import UserRelations
 from .tasks import confirmation_relation_email_celery
+from .models import UserAccount
+
+from django_filters import rest_framework as filters
+from .service import UserFilter
 
 
 @api_view(['POST'])
@@ -54,3 +58,15 @@ def make_match(request, match):
 
     user_data.match_persons.add(match)
     return Response('пользователь добавлен')
+
+
+class UsersListView(generics.ListAPIView):
+    """ Вывод списка пользователей """
+    serializer_class = UserAccountSerializer
+    permission_classes = [AllowAny, ]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = UserFilter
+
+    def get_queryset(self):
+        users_data = UserAccount.objects.all()
+        return users_data

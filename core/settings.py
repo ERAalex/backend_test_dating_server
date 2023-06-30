@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'drf_yasg',
+    'django_filters',
     'debug_toolbar',
 
 ]
@@ -134,6 +135,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKEND": (
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
