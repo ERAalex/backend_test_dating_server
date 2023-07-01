@@ -1,60 +1,10 @@
 
-version: '3'
- 
+
+version: '3.1'
+
 services:
-  app:
-    build:
-      context: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./core:/app
-    command: >
-      sh -c "python3 manage.py migrate &&
-             python3 manage.py makemigrations &&
-             python3 manage.py migrate &&
-             python3 manage.py runserver 0.0.0.0:8000"
- 
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-    depends_on:
-      - db
-             
-  db:
-    image: postgres
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-    volumes:
-      - ./core:/app
+
   redis:
-    image: redis:alpine
-  celery:
-    restart: always
-    build:
-      context: .
-    command: celery -A core worker -l info
-    volumes:
-      - ./core:/app
-    environment:
-      - DB_HOST=${REDIS_DB_HOST}
-      - DB_NAME=${REDIS_DB_NAME}
-      - DB_USER=${REDIS_DB_USER}
-      - DB_PASS=${REDIS_DB_PASS}
-    depends_on:
-      - db
-      - redis
-      - app
-  pgadmin:
-    container_name: db
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    image: redis
     ports:
-      - "5050:80"
+      - '6379:6379'
